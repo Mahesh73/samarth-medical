@@ -1,0 +1,78 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "npm-run-all --parallel webpack:main webpack:renderer electron",
+    "webpack:main": "webpack --config webpack.main.config.js",
+    "webpack:renderer": "webpack-dev-server --config webpack.renderer.config.js",
+    "build:main": "webpack --config webpack.main.config.js --mode production",
+    "build:renderer": "webpack --config webpack.renderer.config.js --mode production",
+    "build:preload": "webpack --config webpack.preload.config.js --mode production",
+    "build": "npm run build:main && npm run build:renderer && npm run build:preload",
+    "electron": "wait-on http://localhost:8080 && electron .",
+    "dist": "npm run build && electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "com.mahesh.samarthaMedical",
+    "productName": "samarthaMedical",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ag-grid-react": "^32.3.0",
+    "bootstrap": "^5.3.3",
+    "electron-log": "^5.2.0",
+    "moment": "^2.30.1",
+    "npm-run-all": "^4.1.5",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.5",
+    "react-bootstrap-icons": "^1.11.4",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "react-select": "^5.8.3",
+    "react-table": "^7.8.0",
+    "react-toastify": "^10.0.6",
+    "sqlite3": "^5.1.7",
+    "sweetalert2": "^11.14.4",
+    "wait-on": "^8.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "electron": "^33.0.2",
+    "electron-builder": "^25.1.8",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  }
+}
