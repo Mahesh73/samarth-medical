@@ -67,15 +67,29 @@ const CustomerData = () => {
   };
 
   const colDefs = [
-    { headerName: "Code", field: "code", filter: true, maxWidth: 100 },
+    { headerName: "Code", field: "code", filter: true, minWidth: 100 },
     {
-      headerName: "Customer Name",
-      flex: 1,
-      valueGetter: (val) =>
-        `${val.data.customer_name_english} ${val.data.customer_name_hindi}`,
+      headerName: "Customer Name in English",
+      field: "customer_name_english",
       filter: true,
     },
-    { headerName: "City", field: "city", filter: true },
+    {
+      headerName: "Customer Name in Marathi",
+      field: "customer_name_marathi",
+      filter: true,
+    },
+    { headerName: "City in English", field: "city_english", filter: true },
+    { headerName: "City in Marathi", field: "city_marathi", filter: true },
+    {
+      headerName: "Address in English",
+      field: "address_english",
+      filter: true,
+    },
+    {
+      headerName: "Address in Marathi",
+      field: "address_marathi",
+      filter: true,
+    },
     {
       headerName: "Action",
       cellRenderer: ActionButtonRenderer,

@@ -178,19 +178,27 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
       if (search) {
         setCustomerName(
           `${search.customer_name_english} ${
-            search.customer_name_hindi && "/ " + search.customer_name_hindi
+            search.customer_name_marathi && "/ " + search.customer_name_marathi
           }`
         );
-        setCity(search.city);
+        setCity(
+          `${search.city_english} ${
+            search.city_marathi && "/ " + search.city_marathi
+          }`
+        );
       }
     }
   };
   const getSelectedCustomerName = (val) => {
     const search = customers.find((item) => item.code === val.code);
-    setCity(search.city);
+    setCity(
+      `${search.city_english} ${
+        search.city_marathi && "/ " + search.city_marathi
+      }`
+    );
     setCustomerName(
       `${search.customer_name_english} ${
-        search.customer_name_hindi && "/ " + search.customer_name_hindi
+        search.customer_name_marathi && "/ " + search.customer_name_marathi
       }`
     );
     setFormData({
@@ -202,7 +210,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
           : search.transport_name_hindi
       }`,
     });
-    setShowPartyNameDropdown(true);
+    setShowCustomerDropdown(false);
   };
   const getSelectedPartyName = (val) => {
     setFormData({
@@ -270,8 +278,8 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                             onClick={() => getSelectedCustomerName(item)}
                           >
                             {`${item.customer_name_english} ${
-                              item.customer_name_hindi &&
-                              "/ " + item.customer_name_hindi
+                              item.customer_name_marathi &&
+                              "/ " + item.customer_name_marathi
                             }`}
                           </Dropdown.Item>
                         ))}
@@ -316,7 +324,10 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                     name="transportName"
                     placeholder="Select Transport Names"
                     onChange={(option) => setSelectedTransports(option.value)}
-                    value={{label: selectedTransports, value: selectedTransports }}
+                    value={{
+                      label: selectedTransports,
+                      value: selectedTransports,
+                    }}
                   />
                 </Form.Group>
               </Col>
@@ -344,8 +355,8 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                         >
                           {partyNameFilterList.map((item, index) => {
                             const name = `${item.customer_name_english} ${
-                              item.customer_name_hindi &&
-                              "/ " + item.customer_name_hindi
+                              item.customer_name_marathi &&
+                              "/ " + item.customer_name_marathi
                             }`;
                             return (
                               <Dropdown.Item

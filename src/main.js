@@ -190,7 +190,7 @@ ipcMain.handle("deleteMedicalData", async (event, id) => {
 
 ipcMain.handle("get-customer-data", async () => {
   return new Promise((resolve, reject) => {
-    db.all(`SELECT * FROM customerData ORDER BY id DESC`, (err, rows) => {
+    db.all(`SELECT * FROM customers ORDER BY id DESC`, (err, rows) => {
       if (err) {
         console.error("Error fetching customer data:", err);
         reject("Error fetching customer data.");
@@ -335,13 +335,14 @@ ipcMain.handle("add-customer-data", async (_, customer) => {
     const {
       code,
       customer_name_english,
-      customer_name_hindi,
-      city,
-      transport_name_english,
-      transport_name_hindi,
+      customer_name_marathi,
+      city_english,
+      city_marathi,
+      address_english,
+      address_marathi,
     } = customer;
 
-    const checkStmt = `SELECT 1 FROM customerData WHERE code = ? LIMIT 1`;
+    const checkStmt = `SELECT 1 FROM customers WHERE code = ? LIMIT 1`;
     db.get(checkStmt, [code], (err, row) => {
       if (err) {
         console.error("Error checking customer code:", err);
@@ -350,17 +351,18 @@ ipcMain.handle("add-customer-data", async (_, customer) => {
         // If customer_code exists, return an error message
         resolve("Error: Customer code already exists.");
       } else {
-        const insertStmt = `INSERT INTO customerData (code, customer_name_english, customer_name_hindi, city, transport_name_english, transport_name_hindi)
-                          VALUES (?, ?, ?, ?, ?, ?)`;
+        const insertStmt = `INSERT INTO customers (code, customer_name_english, customer_name_marathi, city_english, city_marathi, address_english, address_marathi)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)`;
         db.run(
           insertStmt,
           [
             code,
             customer_name_english,
-            customer_name_hindi,
-            city,
-            transport_name_english,
-            transport_name_hindi,
+            customer_name_marathi,
+            city_english,
+            city_marathi,
+            address_english,
+            address_marathi,
           ],
           function (err) {
             if (err) {
@@ -381,23 +383,25 @@ ipcMain.handle("update-customer-data", async (_, customer) => {
     const {
       code,
       customer_name_english,
-      customer_name_hindi,
-      city,
-      transport_name_english,
-      transport_name_hindi,
+      customer_name_marathi,
+      city_english,
+      city_marathi,
+      address_english,
+      address_marathi,
     } = customer;
 
-    const updateStmt = `UPDATE customerData
-                        SET customer_name_english = ?, customer_name_hindi = ?, city = ?, transport_name_english = ?, transport_name_hindi = ?
+    const updateStmt = `UPDATE customers
+                        SET customer_name_english = ?, customer_name_marathi = ?, city_english = ?, city_marathi = ?, address_english = ?, address_marathi = ?
                         WHERE code = ?`;
     db.run(
       updateStmt,
       [
         customer_name_english,
-        customer_name_hindi,
-        city,
-        transport_name_english,
-        transport_name_hindi,
+        customer_name_marathi,
+        city_english,
+        city_marathi,
+        address_english,
+        address_marathi,
         code,
       ],
       function (err) {
@@ -416,7 +420,7 @@ ipcMain.handle("update-customer-data", async (_, customer) => {
 
 ipcMain.handle("delete-customer-data", async (_, code) => {
   return new Promise((resolve, reject) => {
-    const deleteStmt = `DELETE FROM customerData WHERE code = ?`;
+    const deleteStmt = `DELETE FROM customers WHERE code = ?`;
     db.run(deleteStmt, [code], function (err) {
       if (err) {
         console.error("Error deleting customer:", err);
@@ -457,7 +461,7 @@ ipcMain.handle("get-city-names", async () => {
         reject("Error: Could not fetch city names.");
       } else {
         const city = rows.map((row) => row.city);
-        resolve(city); 
+        resolve(city);
       }
     });
   });

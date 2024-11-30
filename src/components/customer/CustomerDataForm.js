@@ -14,8 +14,11 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
   const [formData, setFormData] = useState({
     code: "",
     customer_name_english: "",
-    customer_name_hindi: "",
-    city: "",
+    customer_name_marathi: "",
+    city_english: "",
+    city_marathi: "",
+    address_english: "",
+    address_marathi: "",
   });
   useEffect(() => {
     if (editFlag) {
@@ -27,6 +30,7 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
     let result;
     try {
       if (editFlag) {
+        console.log('call')
         result = await window.electronAPI.updateCustomerData(formData);
       } else {
         result = await window.electronAPI.addCustomerData(formData);
@@ -47,7 +51,7 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
     });
   };
   return (
-    <Modal show={show} onHide={closeModal}>
+    <Modal show={show} onHide={closeModal} size="lg">
       {error && <Alert variant="danger">{error}</Alert>}
       <Modal.Header closeButton>
         <Modal.Title>Customer Form</Modal.Title>
@@ -55,8 +59,8 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
-            <Col>
-              <Form.Group controlId="formCode" className="mb-3">
+            <Col md={4}>
+              <Form.Group controlId="formCode">
                 <Form.Label>Code</Form.Label>
                 <Form.Control
                   type="text"
@@ -68,7 +72,11 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
                   required
                 />
               </Form.Group>
-              <Form.Group controlId="formCustomerNameEnglish" className="mb-3">
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Group controlId="formCustomerNameEnglish">
                 <Form.Label>Customer Name in English</Form.Label>
                 <FormControl
                   type="text"
@@ -79,25 +87,68 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
                   required
                 />
               </Form.Group>
-              <Form.Group controlId="formCustomerNameHindi" className="mb-3">
+            </Col>
+            <Col>
+              <Form.Group controlId="formCustomerNameMarathi">
                 <Form.Label>Customer Name in Hindi</Form.Label>
                 <FormControl
                   type="text"
-                  name="customer_name_hindi"
+                  name="customer_name_marathi"
                   placeholder="Enter customer name in Hindi"
-                  value={formData.customer_name_hindi}
+                  value={formData.customer_name_marathi}
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group controlId="formCity">
-                <Form.Label>City</Form.Label>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Group controlId="formCityInEnglish">
+                <Form.Label>City in English</Form.Label>
                 <Form.Control
                   type="text"
-                  name="city"
-                  placeholder="Enter city"
-                  value={formData.city}
+                  name="city_english"
+                  placeholder="Enter city in English"
+                  value={formData.city_english}
                   onChange={handleChange}
-                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="formCityInMarathi">
+                <Form.Label>City in Marathi</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="city_marathi"
+                  placeholder="Enter city in Marathi"
+                  value={formData.city_marathi}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <Form.Group controlId="formAddressEnglish">
+                <Form.Label>Address in English</Form.Label>
+                <FormControl
+                  type="text"
+                  name="address_english"
+                  placeholder="Enter Address in English"
+                  value={formData.address_english}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="formAddressMarathi">
+                <Form.Label>Address in Hindi</Form.Label>
+                <FormControl
+                  type="text"
+                  name="address_marathi"
+                  placeholder="Enter Address in Marathi"
+                  value={formData.address_marathi}
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>

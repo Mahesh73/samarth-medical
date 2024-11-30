@@ -35,7 +35,6 @@ const Dashboard = () => {
 
   const fetchInvoices = async () => {
     window.electronAPI.getMedicalData().then((res) => {
-      console.log(res);
       setData(res);
     });
   };
@@ -50,7 +49,9 @@ const Dashboard = () => {
         denyButtonText: "Without Sticker",
       }).then((result) => {
         if (result.isDenied) {
-          row.invoice = JSON.parse(row.invoice);
+          if(typeof row.invoice === "string"){
+            row.invoice = JSON.parse(row.invoice);
+          }
           const { customerName, invoice, city, transportName } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           printWindow.document.write(`
@@ -67,7 +68,7 @@ const Dashboard = () => {
                 </style>
               </head>
               <body>
-                <h2>Medical Data Details</h2>
+                <h2>Samarth Medical</h2>
                 <div class="print-section"><strong>Customer Name:</strong> ${customerName}</div>
                 <div class="print-section"><strong>Invoice:</strong> ${invoice}</div>
                 <div class="print-section"><strong>City:</strong> ${city}</div>
@@ -107,6 +108,7 @@ const Dashboard = () => {
                 <div className="invoice-details">
                   <p>
                     <strong>${printCustomerName[0]}</strong>
+                    <br />
                     <strong>${printCustomerName[1]}</strong>
                   </p>
                   <p style={{ marginTop: "52px" }}>
@@ -183,7 +185,6 @@ const Dashboard = () => {
       field: "id",
       minWidth: 100,
       filter: true,
-      valueGetter: (val) => Number(val.node.id) + 1,
     },
     { headerName: "Code", field: "customerCode", minWidth: 85, filter: true },
     {
@@ -196,6 +197,7 @@ const Dashboard = () => {
       filter: true,
       tooltipField: "customerName",
       minWidth: 175,
+      width: 200
     },
     {
       headerName: "Customer Name in Marathi",
@@ -222,7 +224,6 @@ const Dashboard = () => {
           return "Invalid Data";
         }
       },
-      // JSON.parse(val.data.invoice).toString().replace(/,/g, ", "),
     },
     {
       headerName: "City",
@@ -301,6 +302,7 @@ const Dashboard = () => {
       minWidth: 100,
       maxWidth: 100,
       pinned: "right",
+      field: "action",
       sortable: false,
       resizable: false,
     },
@@ -314,6 +316,14 @@ const Dashboard = () => {
   };
   const exportToCSV = () => {
     const excelParam = {
+      processHeaderCallback: (params) => {
+        if (params.column.getColId() === "action") {
+          return null;
+        }
+        const headerName = params.column.getColDef().headerName.toUpperCase();
+        const fixedWidthHeader = headerName.padEnd(20, " ");
+        return `${fixedWidthHeader}`;
+      },
       fileName: `CustomerDailyList_${new Date().toLocaleString()}`,
       headerStyles: {
         font: {
