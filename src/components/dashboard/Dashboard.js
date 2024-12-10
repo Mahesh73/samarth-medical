@@ -49,7 +49,7 @@ const Dashboard = () => {
         denyButtonText: "Without Sticker",
       }).then((result) => {
         if (result.isDenied) {
-          if(typeof row.invoice === "string"){
+          if (typeof row.invoice === "string") {
             row.invoice = JSON.parse(row.invoice);
           }
           const { customerName, invoice, city, transportName } = row;
@@ -85,7 +85,9 @@ const Dashboard = () => {
           `);
           printWindow.document.close();
         } else if (result.isConfirmed) {
-          row.invoice = JSON.parse(row.invoice);
+          if (typeof row.invoice === "string") {
+            row.invoice = JSON.parse(row.invoice);
+          }
           const { customerName, invoice, city, transportName } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           const printCustomerName = customerName.split("/");
@@ -99,25 +101,42 @@ const Dashboard = () => {
                     padding: 20px;
                   }
                   .invoice-details{
-                    margin-right: 50px;
-                    font-size: 30px;
+                    margin-top: 100px;
+                    font-size: 28px;
+                    white-space: nowrap;
+                    margin-left: 75px;
+                  }
+
+                  @media print {
+                    @page {
+                      margin: 0; /* Removes default margins for the printed page */
+                    }
+
+                    body {
+                      margin: 0;
+                      padding: 0;
+                    }
+
+                    footer {
+                      display: none; /* Hide footer */
+                    }
                   }
                 </style>
               </head>
               <body>
-                <div className="invoice-details">
+                <div class="invoice-details">
                   <p>
                     <strong>${printCustomerName[0]}</strong>
                     <br />
                     <strong>${printCustomerName[1]}</strong>
                   </p>
-                  <p style={{ marginTop: "52px" }}>
+                  <p style="margin-left: 20px;margin-top: 35px">
                     <strong>${city}</strong>
                   </p>
-                  <p style={{ marginLeft: "50px" }}>
+                  <p style="margin-top: -25px; margin-left: 85px;">
                     <strong>${invoice}</strong>
                   </p>
-                    <p style={{ marginLeft: "50px" }}>
+                    <p style="margin-top: -25px; margin-left: 70px; font-size: 25px;">
                       <strong>${transportName}</strong>
                     </p>
                 </div>
@@ -197,7 +216,7 @@ const Dashboard = () => {
       filter: true,
       tooltipField: "customerName",
       minWidth: 175,
-      width: 200
+      width: 200,
     },
     {
       headerName: "Customer Name in Marathi",
@@ -269,7 +288,7 @@ const Dashboard = () => {
       minWidth: 135,
       valueGetter: (val) =>
         val.data.createdDate
-          ? new Date(val.data.createdDate).toLocaleDateString()
+          ? new Date(val.data.createdDate).toLocaleString()
           : "",
     },
     {
@@ -279,7 +298,7 @@ const Dashboard = () => {
       minWidth: 137,
       valueGetter: (val) =>
         val.data.updatedDate
-          ? new Date(val.data.updatedDate).toLocaleDateString()
+          ? new Date(val.data.updatedDate).toLocaleString()
           : "",
     },
     {
