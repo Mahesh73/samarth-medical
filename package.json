@@ -1,7 +1,7 @@
 {
   "name": "electron",
   "version": "1.0.0",
-  "main": "src/main.js",
+  "main": "dist/main.js",
   "scripts": {
     "start": "npm-run-all --parallel webpack:main webpack:renderer electron",
     "webpack:main": "webpack --config webpack.main.config.js",
@@ -15,8 +15,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
-    "appId": "com.mahesh.samarthaMedical",
-    "productName": "samarthaMedical",
+    "appId": "com.mahesh.trackyBot",
+    "productName": "trackyBot",
     "directories": {
       "output": "release"
     },

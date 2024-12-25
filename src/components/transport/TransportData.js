@@ -212,7 +212,7 @@ const TransportData = () => {
       headerName: "Transport Name in English",
       field: "transport_name_english",
       filter: true,
-      minWidth: 215,
+      minWidth: 240,
     },
     {
       headerName: "Transport Name in Hindi",
@@ -235,7 +235,7 @@ const TransportData = () => {
     },
   ];
   return (
-    <Container>
+    <div className="m-2">
       <div
         className="m-2"
         style={{
@@ -266,7 +266,7 @@ const TransportData = () => {
           editFlag={editFlag}
         />
       )}
-      <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+      <div className="ag-theme-alpine" style={{ height: '80vh', width: "100%" }}>
         <AgGridReact
           rowData={transportList}
           columnDefs={colDefs}
@@ -274,7 +274,7 @@ const TransportData = () => {
           pagination={true}
         />
       </div>
-    </Container>
+    </div>
   );
 };
 

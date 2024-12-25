@@ -51,16 +51,19 @@ ipcMain.handle("save-medicalData", async (event, data) => {
     const createdDate = new Date().toISOString();
     const updatedDate = createdDate;
     const placeholders = data.invoice.map(() => "?").join(",");
-    const query = `INSERT INTO medicalData (customerCode, customerName, invoice, partyName, description, city, transportName, billValue, createdDate, updatedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO medicalData (customerCode, customerNameEnglish, customerNameMarathi, invoice, partyName, description, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi, billValue, createdDate, updatedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const invoiceNoJSON = JSON.stringify(data.invoice);
     const values = [
       data.customerCode,
-      data.customerName,
+      data.customerNameEnglish,
+      data.customerNameMarathi,
       invoiceNoJSON,
       data.partyName,
       data.description,
-      data.city,
-      data.transportName,
+      data.cityEnglish,
+      data.cityMarathi,
+      data.transportNameEnglish,
+      data.transportNameMarathi,
       data.billValue,
       createdDate,
       updatedDate,
@@ -105,15 +108,18 @@ ipcMain.handle("updateMedicalData", async (event, data) => {
   const invoiceNoJSON = JSON.stringify(data.invoice);
   const updatedDate = new Date().toISOString();
   const placeholders = data.invoice.map(() => "?").join(",");
-  const query = `UPDATE medicalData SET customerCode = ?, customerName = ?, invoice = ?, partyName = ?, description = ?, city = ?, transportName = ?, billValue = ?, updatedDate = ? WHERE id = ?`;
+  const query = `UPDATE medicalData SET customerCode = ?, customerNameEnglish = ?, customerNameMarathi = ?, invoice = ?, partyName = ?, description = ?, cityEnglish = ?, cityMarathi = ?, transportNameEnglish = ?, transportNameMarathi = ?, billValue = ?, updatedDate = ? WHERE id = ?`;
   const values = [
     data.customerCode,
-    data.customerName,
+    data.customerNameEnglish,
+    data.customerNameMarathi,
     invoiceNoJSON,
     data.partyName,
     data.description,
-    data.city,
-    data.transportName,
+    data.cityEnglish,
+    data.cityMarathi,
+    data.transportNameEnglish,
+    data.transportNameMarathi,
     data.billValue,
     updatedDate,
     data.id,
@@ -141,7 +147,6 @@ ipcMain.handle("updateMedicalData", async (event, data) => {
           const duplicates = lowercasedInvoices.filter((num) =>
             existingNos.includes(num)
           );
-          console.log(duplicates, existingNos);
           resolve({
             error: `Duplicate invoice numbers found: ${duplicates.join(", ")}`,
           });
@@ -437,15 +442,15 @@ ipcMain.handle("delete-customer-data", async (_, code) => {
 
 ipcMain.handle("get-transport-names", async () => {
   return new Promise((resolve, reject) => {
-    const query = `SELECT DISTINCT transportName FROM medicalData`;
+    const query = `SELECT DISTINCT transportNameEnglish FROM medicalData ORDER BY id DESC`;
 
     db.all(query, (err, rows) => {
       if (err) {
         console.error("Error fetching transport names:", err);
         reject("Error: Could not fetch transport names.");
       } else {
-        const transportNames = rows.map((row) => row.transportName);
-        resolve(transportNames); // Returns an array of unique transport names
+        const transportNames = rows.map((row) => row.transportNameEnglish);
+        resolve(transportNames); 
       }
     });
   });
@@ -453,14 +458,14 @@ ipcMain.handle("get-transport-names", async () => {
 
 ipcMain.handle("get-city-names", async () => {
   return new Promise((resolve, reject) => {
-    const query = `SELECT DISTINCT city FROM medicalData ORDER BY id DESC`;
+    const query = `SELECT DISTINCT cityEnglish FROM medicalData ORDER BY id DESC`;
 
     db.all(query, (err, rows) => {
       if (err) {
         console.error("Error fetching city names:", err);
         reject("Error: Could not fetch city names.");
       } else {
-        const city = rows.map((row) => row.city);
+        const city = rows.map((row) => row.cityEnglish);
         resolve(city);
       }
     });
@@ -470,15 +475,14 @@ ipcMain.handle("get-city-names", async () => {
 ipcMain.handle(
   "get-MedicalData-By-TransportOrCity",
   async (event, { transportNames, cities }) => {
-    console.log(transportNames, cities);
     return new Promise((resolve, reject) => {
       const transportPlaceholders = transportNames.map(() => "?").join(",");
       const cityPlaceholders = cities.map(() => "?").join(",");
       const query = `
         SELECT *
         FROM medicalData
-        WHERE transportName IN (${transportPlaceholders})
-          OR city IN (${cityPlaceholders});
+        WHERE TRIM(transportNameEnglish) IN (${transportPlaceholders})
+          OR TRIM(cityEnglish) IN (${cityPlaceholders});
       `;
       const values = [...transportNames, ...cities];
       db.all(query, values, (err, rows) => {
@@ -503,8 +507,8 @@ function createWindow() {
       contextIsolation: true,
     },
   });
-  win.loadURL("http://localhost:8080"); // development
-  // win.loadURL(`file://${path.join(__dirname, "index.html")}`); //production
+  // win.loadURL("http://localhost:8080"); // development
+  win.loadURL(`file://${path.join(__dirname, "index.html")}`); //production
 }
 
 app.on("ready", createWindow);

@@ -22,13 +22,12 @@ const TransportSelection = ({ setShow, setData }) => {
   useEffect(() => {
     window.electronAPI.getTransportData().then((data) => {
       const options = data.map((item) => ({
-        value: `${item.transport_name_english} / ${item.transport_name_hindi}`,
-        label: `${item.transport_name_english} / ${item.transport_name_hindi}`,
+        value: item.transport_name_english,
+        label: item.transport_name_english,
       }));
       setTransportOptions(options);
     });
     window.electronAPI.getCityNames().then((res) => {
-      console.log(res);
       const options = res.map((item) => ({
         value: item,
         label: item,
@@ -80,7 +79,7 @@ const TransportSelection = ({ setShow, setData }) => {
                   }),
                 }}
                 onChange={(selectedOptions) =>
-                  setSelectedTransports(selectedOptions.map((opt) => opt.value))
+                  setSelectedTransports(selectedOptions.map((opt) => opt.value?.trim()))
                 }
               />
             ) : (
@@ -122,15 +121,21 @@ const TransportReport = () => {
   const colDefs = [
     {
       headerName: "Sr. No.",
-      valueGetter: (val) => Number(val.node.id) + 1,
+      field: 'id',
       filter: true,
       maxWidth: 100,
     },
     { headerName: "Code", field: "customerCode", filter: true, maxWidth: 100 },
     {
-      headerName: "Customer Name",
-      field: "customerName",
-      tooltipField: "customerName",
+      headerName: "Customer Name in English",
+      field: "customerNameEnglish",
+      tooltipField: "customerNameEnglish",
+      filter: true,
+    },
+    {
+      headerName: "Customer Name in Marathi",
+      field: "customerNameMarathi",
+      tooltipField: "customerNameMarathi",
       filter: true,
     },
     {
@@ -140,10 +145,16 @@ const TransportReport = () => {
       tooltipField: "invoice",
     },
     {
-      headerName: "City",
-      field: "city",
+      headerName: "City Name in English",
+      field: "cityEnglish",
       filter: true,
-      tooltipField: "city",
+      tooltipField: "cityEnglish",
+    },
+    {
+      headerName: "City Name in Marathi",
+      field: "cityMarathi",
+      filter: true,
+      tooltipField: "cityMarathi",
     },
     {
       headerName: "Other Party Names",
@@ -223,7 +234,7 @@ const TransportReport = () => {
         {show && <TransportSelection setShow={setShow} setData={setData} />}
       </div>
       {!show && (
-        <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+        <div className="ag-theme-alpine" style={{ height: '80vh', width: "100%" }}>
           <AgGridReact
             rowData={data}
             ref={gridRef}

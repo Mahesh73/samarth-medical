@@ -3,13 +3,15 @@ const path = require("path");
 const fs = require("fs");
 const { app } = require("electron");
 
-// let dbPath = path.join(app.getPath('userData'), 'database.db');
-// const sourceDbPath = path.join(__dirname, 'database.db');
-// fs.copyFileSync(sourceDbPath, dbPath);
+let dbPath = path.join(app.getPath('userData'), 'database.db');
+const sourceDbPath = path.join(__dirname, 'database.db');
+if (!fs.existsSync(dbPath)) {
+  fs.copyFileSync(sourceDbPath, dbPath);
+}
 
 // Change for dev and prod
-// const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+// const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {
   if (err) {
     console.error("Error opening database:", err.message);
   } else {
@@ -17,12 +19,15 @@ const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {
     db.run(`CREATE TABLE IF NOT EXISTS medicalData (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       customerCode TEXT,
-      customerName TEXT,
+      customerNameEnglish TEXT,
+      customerNameMarathi TEXT,
       invoice TEXT,
-      transportName TEXT,
+      transportNameEnglish TEXT,
+      transportNameMarathi TEXT,
       partyName TEXT,
       description TEXT,
-      city TEXT,
+      cityEnglish TEXT,
+      cityMarathi TEXT,
       billValue TEXT,
       createdDate TEXT,
       updatedDate TEXT

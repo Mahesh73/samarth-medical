@@ -42,7 +42,7 @@ const Dashboard = () => {
   const ActionButtonRenderer = (props) => {
     const handlePrint = (row) => {
       Swal.fire({
-        title: `Do you want to Print for ${row.customerName}`,
+        title: `Do you want to Print for ${row.customerNameEnglish}`,
         showDenyButton: true,
         showCancelButton: true,
         confirmButtonText: "With Sticker",
@@ -52,7 +52,7 @@ const Dashboard = () => {
           if (typeof row.invoice === "string") {
             row.invoice = JSON.parse(row.invoice);
           }
-          const { customerName, invoice, city, transportName } = row;
+          const { customerNameEnglish, customerNameMarathi, invoice, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           printWindow.document.write(`
             <html>
@@ -69,10 +69,10 @@ const Dashboard = () => {
               </head>
               <body>
                 <h2>Samarth Medical</h2>
-                <div class="print-section"><strong>Customer Name:</strong> ${customerName}</div>
+                <div class="print-section"><strong>Customer Name:</strong> ${customerNameEnglish} ${customerNameMarathi}</div>
                 <div class="print-section"><strong>Invoice:</strong> ${invoice}</div>
-                <div class="print-section"><strong>City:</strong> ${city}</div>
-                <div class="print-section"><strong>Transport:</strong> ${transportName}</div>
+                <div class="print-section"><strong>City:</strong> ${cityEnglish} ${cityMarathi}</div>
+                <div class="print-section"><strong>Transport:</strong> ${transportNameEnglish} ${transportNameMarathi}</div>
                 <div class="print-section"><strong>Case No:</strong> </div>
                 <script>
                   window.print();
@@ -88,9 +88,8 @@ const Dashboard = () => {
           if (typeof row.invoice === "string") {
             row.invoice = JSON.parse(row.invoice);
           }
-          const { customerName, invoice, city, transportName } = row;
+          const { customerNameEnglish, customerNameMarathi, invoice, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
-          const printCustomerName = customerName.split("/");
           printWindow.document.write(`
             <html>
               <head>
@@ -126,18 +125,18 @@ const Dashboard = () => {
               <body>
                 <div class="invoice-details">
                   <p>
-                    <strong>${printCustomerName[0]}</strong>
+                    <strong>${customerNameEnglish}</strong>
                     <br />
-                    <strong>${printCustomerName[1]}</strong>
+                    <strong>${customerNameMarathi}</strong>
                   </p>
                   <p style="margin-left: 20px;margin-top: 35px">
-                    <strong>${city}</strong>
+                    <strong>${cityEnglish} ${cityMarathi}</strong>
                   </p>
                   <p style="margin-top: -25px; margin-left: 85px;">
                     <strong>${invoice}</strong>
                   </p>
                     <p style="margin-top: -25px; margin-left: 70px; font-size: 25px;">
-                      <strong>${transportName}</strong>
+                      <strong>${transportNameEnglish} ${transportNameMarathi}</strong>
                     </p>
                 </div>
                 <script>
@@ -208,25 +207,17 @@ const Dashboard = () => {
     { headerName: "Code", field: "customerCode", minWidth: 85, filter: true },
     {
       headerName: "Customer Name in English",
-      valueGetter: (val) => {
-        const splitData = val.data.customerName.split("/");
-        return splitData[0];
-      },
-      field: "customerName",
+      field: "customerNameEnglish",
       filter: true,
-      tooltipField: "customerName",
+      tooltipField: "customerNameEnglish",
       minWidth: 175,
       width: 200,
     },
     {
       headerName: "Customer Name in Marathi",
-      valueGetter: (val) => {
-        const splitData = val.data.customerName.split("/");
-        return splitData[1];
-      },
-      field: "customerName",
+      field: "customerNameMarathi",
       filter: true,
-      tooltipField: "customerName",
+      tooltipField: "customerNameMarathi",
       minWidth: 175,
     },
     {
@@ -245,31 +236,30 @@ const Dashboard = () => {
       },
     },
     {
-      headerName: "City",
-      field: "city",
-      tooltipField: "city",
+      headerName: "City in English",
+      field: "cityEnglish",
+      tooltipField: "cityEnglish",
+      filter: true,
+      minWidth: 100,
+    },
+    {
+      headerName: "City in Marathi",
+      field: "cityMarathi",
+      tooltipField: "cityMarathi",
       filter: true,
       minWidth: 100,
     },
     {
       headerName: "Transport Name in English",
-      field: "transportName",
-      tooltipField: "transportName",
-      valueGetter: (val) => {
-        const splitData = val.data.transportName.split("/");
-        return splitData[0];
-      },
+      field: "transportNameEnglish",
+      tooltipField: "transportNameEnglish",
       filter: true,
       minWidth: 170,
     },
     {
       headerName: "Transport Name in Marathi",
-      field: "transportName",
-      tooltipField: "transportName",
-      valueGetter: (val) => {
-        const splitData = val.data.transportName.split("/");
-        return splitData[1];
-      },
+      field: "transportNameMarathi",
+      tooltipField: "transportNameMarathi",
       filter: true,
       minWidth: 170,
     },
@@ -391,7 +381,7 @@ const Dashboard = () => {
       )}
 
       {showGrid && (
-        <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+        <div className="ag-theme-alpine" style={{ height: '80vh', width: "100%" }}>
           <AgGridReact
             rowData={data}
             columnDefs={colDefs}
@@ -407,27 +397,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* <div className="invoice-details">
-        <Row>
-          <p>
-            <strong>{selectedRow.customerName}</strong>{" "}
-          </p>
-          <p style={{ marginTop: "52px" }}>
-            <strong>{selectedRow.city}</strong>{" "}
-          </p>
-          <p style={{ marginLeft: "50px" }}>
-            <strong>{selectedRow.invoice}</strong>
-          </p>
-          <Col>
-            <p style={{ marginLeft: "50px" }}>
-              <strong>{selectedRow.transportName}</strong>{" "}
-            </p>
-            <p>
-              <strong>Customer Code:</strong> {selectedRow.customerCode}
-            </p>
-          </Col>
-        </Row>
-      </div> */}
     </div>
   );
 };

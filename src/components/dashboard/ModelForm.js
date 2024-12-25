@@ -36,15 +36,17 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
 
   useEffect(() => {
     if (editFlag && editData?.invoice) {
-      console.log(editData);
       setTimeout(() => {
         editData.invoice = JSON.parse(editData.invoice)
           .toString()
           .replace(/,/g, ", ");
         setFormData(editData);
-        setCustomerName(editData?.customerName);
-        setCity(editData?.city);
-        setSelectedTransports(editData?.transportName);
+        const customerName = `${editData.customerNameEnglish} / ${editData.customerNameMarathi}`;
+        setCustomerName(customerName);
+        const city = `${editData.cityEnglish} / ${editData.cityMarathi}`
+        setCity(city);
+        const transportName = `${editData.transportNameEnglish} / ${editData.transportNameMarathi}`
+        setSelectedTransports(transportName);
       }, 500);
     } else {
       setFormData({
@@ -125,11 +127,15 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
         item.code.toLowerCase() === formData.customerCode.toLocaleLowerCase()
     );
     if (checkCode) {
+      const transportName = selectedTransports.split('/');
       const newData = formData;
       newData.customerCode = checkCode.code;
-      newData.city = city;
-      newData.customerName = customerName;
-      newData.transportName = selectedTransports;
+      newData.cityEnglish = checkCode.city_english;
+      newData.cityMarathi = checkCode.city_marathi;
+      newData.customerNameEnglish = checkCode.customer_name_english;
+      newData.customerNameMarathi = checkCode.customer_name_marathi;
+      newData.transportNameEnglish = transportName[0];
+      newData.transportNameMarathi = transportName[1];
       let invoice =
         typeof formData.invoice === "string" &&
         formData?.invoice.split(",").map((item) => item.trim());

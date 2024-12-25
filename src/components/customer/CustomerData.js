@@ -119,7 +119,7 @@ const CustomerData = () => {
     gridRef.current.api.exportDataAsCsv(excelParam);
   };
   return (
-    <Container>
+    <div className="m-2">
       <div
         className="m-2"
         style={{
@@ -154,7 +154,7 @@ const CustomerData = () => {
           editFlag={editFlag}
         />
       )}
-      <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+      <div className="ag-theme-alpine" style={{ height: '80vh', width: "100%" }}>
         <AgGridReact
           rowData={customers}
           columnDefs={colDefs}
@@ -166,7 +166,7 @@ const CustomerData = () => {
           suppressExcelExport={true}
         />
       </div>
-    </Container>
+    </div>
   );
 };
 
