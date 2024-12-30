@@ -52,7 +52,15 @@ const Dashboard = () => {
           if (typeof row.invoice === "string") {
             row.invoice = JSON.parse(row.invoice);
           }
-          const { customerNameEnglish, customerNameMarathi, invoice, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi } = row;
+          const {
+            customerNameEnglish,
+            customerNameMarathi,
+            invoice,
+            cityEnglish,
+            cityMarathi,
+            transportNameEnglish,
+            transportNameMarathi,
+          } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           printWindow.document.write(`
             <html>
@@ -64,6 +72,7 @@ const Dashboard = () => {
                   }
                   .print-section {
                     margin-bottom: 20px;
+                    color: #0000F6;
                   }
                 </style>
               </head>
@@ -88,7 +97,15 @@ const Dashboard = () => {
           if (typeof row.invoice === "string") {
             row.invoice = JSON.parse(row.invoice);
           }
-          const { customerNameEnglish, customerNameMarathi, invoice, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi } = row;
+          const {
+            customerNameEnglish,
+            customerNameMarathi,
+            invoice,
+            cityEnglish,
+            cityMarathi,
+            transportNameEnglish,
+            transportNameMarathi,
+          } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           printWindow.document.write(`
             <html>
@@ -104,6 +121,7 @@ const Dashboard = () => {
                     font-size: 28px;
                     white-space: nowrap;
                     margin-left: 75px;
+                    color: #0000F6;
                   }
 
                   @media print {
@@ -381,7 +399,10 @@ const Dashboard = () => {
       )}
 
       {showGrid && (
-        <div className="ag-theme-alpine" style={{ height: '80vh', width: "100%" }}>
+        <div
+          className="ag-theme-alpine"
+          style={{ height: "80vh", width: "100%" }}
+        >
           <AgGridReact
             rowData={data}
             columnDefs={colDefs}
@@ -396,7 +417,6 @@ const Dashboard = () => {
           />
         </div>
       )}
-
     </div>
   );
 };
