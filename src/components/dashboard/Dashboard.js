@@ -60,6 +60,8 @@ const Dashboard = () => {
             cityMarathi,
             transportNameEnglish,
             transportNameMarathi,
+            customerCode,
+            id
           } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           printWindow.document.write(`
@@ -72,17 +74,21 @@ const Dashboard = () => {
                   }
                   .print-section {
                     margin-bottom: 20px;
-                    color: #0000F6;
+                    color: #ad4844;
                   }
                 </style>
               </head>
               <body>
-                <h2>Samarth Medical</h2>
-                <div class="print-section"><strong>Customer Name:</strong> ${customerNameEnglish} ${customerNameMarathi}</div>
+                <h2 class="print-section">Samarth Medical</h2>
+                <div class="print-section"><strong>Customer Name:</strong> ${customerNameEnglish} <br/> 
+                  <span style="margin-left: 135px">${customerNameMarathi}</span>
+                </div>
                 <div class="print-section"><strong>Invoice:</strong> ${invoice}</div>
                 <div class="print-section"><strong>City:</strong> ${cityEnglish} ${cityMarathi}</div>
-                <div class="print-section"><strong>Transport:</strong> ${transportNameEnglish} ${transportNameMarathi}</div>
-                <div class="print-section"><strong>Case No:</strong> </div>
+                <div class="print-section"><strong>Transport:</strong> ${transportNameEnglish} <br/> 
+                  <span style="margin-left: 85px"> ${transportNameMarathi}</span>
+                </div>
+                <div class="print-section"><strong>Sr. No:</strong> ${id} &emsp; <strong>Customer Code: </strong> ${customerCode} &emsp; <strong>Case No:</strong> </div>
                 <script>
                   window.print();
                   window.onafterprint = function() {
@@ -105,6 +111,8 @@ const Dashboard = () => {
             cityMarathi,
             transportNameEnglish,
             transportNameMarathi,
+            id,
+            customerCode
           } = row;
           const printWindow = window.open("", "_blank", "width=600,height=400");
           printWindow.document.write(`
@@ -121,9 +129,15 @@ const Dashboard = () => {
                     font-size: 28px;
                     white-space: nowrap;
                     margin-left: 75px;
-                    color: #0000F6;
+                    color: #ad4844;
                   }
-
+                  .serialNo{
+                    writing-mode: vertical-lr;
+                    position: absolute;
+                    top: 200px;
+                    right: 5px;
+                    font-size: 15px;
+                  }
                   @media print {
                     @page {
                       margin: 0; /* Removes default margins for the printed page */
@@ -143,19 +157,24 @@ const Dashboard = () => {
               <body>
                 <div class="invoice-details">
                   <p>
-                    <strong>${customerNameEnglish}</strong>
+                    <strong>${customerNameEnglish === null ? '' : customerNameEnglish}</strong>
                     <br />
-                    <strong>${customerNameMarathi}</strong>
+                    <strong>${customerNameMarathi === null ? '' : customerNameMarathi}(${customerCode})</strong>
                   </p>
                   <p style="margin-left: 20px;margin-top: 35px">
-                    <strong>${cityEnglish} ${cityMarathi}</strong>
+                    <strong>${cityEnglish === null ? '': cityEnglish} ${cityMarathi === null ? '' : cityMarathi}</strong>
                   </p>
                   <p style="margin-top: -25px; margin-left: 85px;">
-                    <strong>${invoice}</strong>
+                    <strong>${invoice === null ? '' : invoice}</strong>
                   </p>
-                    <p style="margin-top: -25px; margin-left: 70px; font-size: 25px;">
-                      <strong>${transportNameEnglish} ${transportNameMarathi}</strong>
-                    </p>
+                  <p style="margin-top: -25px; margin-left: 70px; font-size: 25px;">
+                    <strong>${transportNameEnglish === null ? '' : transportNameEnglish}</strong>
+                    <br />
+                    <strong>${transportNameMarathi === null ? '' : transportNameMarathi}</strong>
+                  </p>
+                  <div class="serialNo">
+                    <strong>Sr. No:- ${id}</strong>
+                  </div>
                 </div>
                 <script>
                   window.print();
