@@ -10,12 +10,14 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import TransportReport from "./components/reports/TransportReport";
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 import './style.css';
 
 const App = () => {
+  ModuleRegistry.registerModules([AllCommunityModule]);
   const [role, setRole] = useState(localStorage.getItem('userRole'));
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("dashboard");
@@ -58,7 +60,7 @@ const App = () => {
         {selectedMenu === "dashboard" && <Dashboard />}
         {selectedMenu === "customerData" && <CustomerForm />}
         {selectedMenu === "transportData" && <TransportData />}
-        {selectedMenu === "transportReport" && <TransportReport />}
+        {selectedMenu === "transportReport" && <TransportReport openDashboard={() => setSelectedMenu('dashboard')} />}
       </div>
     </Router>
   );

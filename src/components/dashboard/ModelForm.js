@@ -20,6 +20,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
     invoice: "",
     partyName: "",
     billValue: "",
+    caseNo: "",
     description: "",
   });
   const dropdownRef = useRef(null);
@@ -45,7 +46,9 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
         setCustomerName(customerName);
         const city = `${editData.cityEnglish} / ${editData.cityMarathi}`
         setCity(city);
-        const transportName = `${editData.transportNameEnglish} / ${editData.transportNameMarathi}`
+        const transportName = editData.transportNameMarathi !== null ? 
+          `${editData.transportNameEnglish} / ${editData.transportNameMarathi}` : 
+          editData.transportNameEnglish
         setSelectedTransports(transportName);
       }, 500);
     } else {
@@ -54,9 +57,11 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
         invoice: "",
         partyName: "",
         billValue: "",
+        caseNo: "",
         description: "",
       });
       setCustomerName("");
+      setSelectedTransports('Other')
       setCity("");
     }
   }, [editData]);
@@ -67,6 +72,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
       invoice: "",
       partyName: "",
       billValue: "",
+      caseNo: "",
       description: "",
     });
     setCustomerName("");
@@ -75,7 +81,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
     window.electronAPI.getTransportData().then((data) => {
       const options = data.map((item) => ({
         value: `${item.transport_name_english} / ${item.transport_name_hindi}`,
-        label: `${item.transport_name_english} / ${item.transport_name_hindi}`,
+        label: item.transport_name_hindi ? `${item.transport_name_english} / ${item.transport_name_hindi}` : item.transport_name_english,
       }));
       setTransportOptions(options);
     });
@@ -139,7 +145,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
       let invoice =
         typeof formData.invoice === "string" &&
         formData?.invoice.split(",").map((item) => item.trim());
-      newData.invoice = invoice;
+        newData.invoice = invoice;
       let result;
       if (editData) {
         result = await window.electronAPI.updateMedicalData({
@@ -159,6 +165,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
           invoice: "",
           partyName: "",
           billValue: "",
+          caseNo: "",
           description: "",
         });
         setCustomerName("");
@@ -247,6 +254,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                     type="text"
                     name="customerCode"
                     placeholder="Enter customer Code"
+                    autoFocus
                     value={formData?.customerCode}
                     onChange={handleChange}
                   />
@@ -363,7 +371,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                             const name = `${item.customer_name_english} ${
                               item.customer_name_marathi &&
                               "/ " + item.customer_name_marathi
-                            }`;
+                            } (${item.city_english} / ${item.city_marathi})`;
                             return (
                               <Dropdown.Item
                                 key={index}
@@ -380,7 +388,19 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
+            <Col md={3}>
+                <Form.Group controlId="formCaseNo">
+                  <Form.Label>Case No.</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="caseNo"
+                    placeholder="Enter Case No."
+                    value={formData?.caseNo}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
               <Col md={3}>
                 <Form.Group controlId="formBillValue">
                   <Form.Label>Bill Value</Form.Label>

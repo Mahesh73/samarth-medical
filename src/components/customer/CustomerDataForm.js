@@ -30,7 +30,6 @@ const customerDataForm = ({ show, closeModal, editData, editFlag }) => {
     let result;
     try {
       if (editFlag) {
-        console.log('call')
         result = await window.electronAPI.updateCustomerData(formData);
       } else {
         result = await window.electronAPI.addCustomerData(formData);

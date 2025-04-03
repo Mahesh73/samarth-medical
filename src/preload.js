@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("delete-customer-data", code),
   getTransportNames: () => ipcRenderer.invoke("get-transport-names"),
   getCityNames: () => ipcRenderer.invoke("get-city-names"),
+  printData: (htmlContent) => ipcRenderer.invoke("print-data", htmlContent),
   getConnection: () => ipcRenderer.invoke("get-connection"),
   getTransportData: () => ipcRenderer.invoke("get-transport-data"),
   addTransportData: (transport) =>

@@ -61,44 +61,45 @@ const Dashboard = () => {
             transportNameEnglish,
             transportNameMarathi,
             customerCode,
-            id
+            id,
+            caseNo
           } = row;
-          const printWindow = window.open("", "_blank", "width=600,height=400");
-          printWindow.document.write(`
-            <html>
+          const htmlContent = `<html>
               <head>
                 <title>Print Medical Data</title>
                 <style>
                   body {
                     font-family: Arial, sans-serif;
+                    margin-left: 75px
                   }
                   .print-section {
                     margin-bottom: 20px;
                     color: #ad4844;
+                    font-size: 17px
                   }
                 </style>
               </head>
               <body>
-                <h2 class="print-section">Samarth Medical</h2>
+                <h1 class="print-section" style="font-size: 26px">Samarth Medical Stores</h1>
                 <div class="print-section"><strong>Customer Name:</strong> ${customerNameEnglish} <br/> 
                   <span style="margin-left: 135px">${customerNameMarathi}</span>
                 </div>
                 <div class="print-section"><strong>Invoice:</strong> ${invoice}</div>
                 <div class="print-section"><strong>City:</strong> ${cityEnglish} ${cityMarathi}</div>
                 <div class="print-section"><strong>Transport:</strong> ${transportNameEnglish} <br/> 
-                  <span style="margin-left: 85px"> ${transportNameMarathi}</span>
+                  <span style="margin-left: 85px"> ${
+                    transportNameMarathi !== null ? transportNameMarathi : ""
+                  }</span>
                 </div>
-                <div class="print-section"><strong>Sr. No:</strong> ${id} &emsp; <strong>Customer Code: </strong> ${customerCode} &emsp; <strong>Case No:</strong> </div>
-                <script>
-                  window.print();
-                  window.onafterprint = function() {
-                    window.close();
-                  };
-                </script>
+                <div class="print-section">
+                  <strong>Sr. No:</strong> ${id} &emsp; 
+                  <strong>Customer Code: </strong> ${customerCode} &emsp; 
+                  <strong>Case No:</strong> ${caseNo}
+                 </div>
               </body>
             </html>
-          `);
-          printWindow.document.close();
+          `;
+          window.electronAPI.printData(htmlContent);
         } else if (result.isConfirmed) {
           if (typeof row.invoice === "string") {
             row.invoice = JSON.parse(row.invoice);
@@ -112,42 +113,38 @@ const Dashboard = () => {
             transportNameEnglish,
             transportNameMarathi,
             id,
-            customerCode
+            customerCode,
+            caseNo
           } = row;
-          const printWindow = window.open("", "_blank", "width=600,height=400");
-          printWindow.document.write(`
-            <html>
+          const htmlContent = `<html>
               <head>
                 <title>Print Medical Data</title>
                 <style>
                   body {
                     font-family: Arial, sans-serif;
-                    padding: 20px;
+                    padding: 15px;
                   }
                   .invoice-details{
-                    margin-top: 100px;
-                    font-size: 28px;
+                    margin-top: 125px;
+                    font-size: 22px;
                     white-space: nowrap;
-                    margin-left: 75px;
+                    margin-left: 20px;
                     color: #ad4844;
                   }
                   .serialNo{
-                    writing-mode: vertical-lr;
                     position: absolute;
-                    top: 200px;
-                    right: 5px;
+                    top: 170px;
+                    left: 220px;
                     font-size: 15px;
                   }
+                  .print-section {
+                    margin-top: 10px;
+                  }
                   @media print {
-                    @page {
-                      margin: 0; /* Removes default margins for the printed page */
-                    }
-
                     body {
                       margin: 0;
                       padding: 0;
                     }
-
                     footer {
                       display: none; /* Hide footer */
                     }
@@ -156,36 +153,26 @@ const Dashboard = () => {
               </head>
               <body>
                 <div class="invoice-details">
-                  <p>
-                    <strong>${customerNameEnglish === null ? '' : customerNameEnglish}</strong>
-                    <br />
-                    <strong>${customerNameMarathi === null ? '' : customerNameMarathi}(${customerCode})</strong>
-                  </p>
-                  <p style="margin-left: 20px;margin-top: 35px">
-                    <strong>${cityEnglish === null ? '': cityEnglish} ${cityMarathi === null ? '' : cityMarathi}</strong>
-                  </p>
-                  <p style="margin-top: -25px; margin-left: 85px;">
-                    <strong>${invoice === null ? '' : invoice}</strong>
-                  </p>
-                  <p style="margin-top: -25px; margin-left: 70px; font-size: 25px;">
-                    <strong>${transportNameEnglish === null ? '' : transportNameEnglish}</strong>
-                    <br />
-                    <strong>${transportNameMarathi === null ? '' : transportNameMarathi}</strong>
-                  </p>
-                  <div class="serialNo">
-                    <strong>Sr. No:- ${id}</strong>
-                  </div>
+                <div class="print-section"><strong>Customer Name:</strong> ${customerNameEnglish} <br/> 
+                  <span style="margin-left: 150px">${customerNameMarathi}</span>
                 </div>
-                <script>
-                  window.print();
-                  window.onafterprint = function() {
-                    window.close();
-                  };
-                </script>
+                <div class="print-section"><strong>Invoice:</strong> ${invoice}</div>
+                <div class="print-section"><strong>City:</strong> ${cityEnglish} ${cityMarathi}</div>
+                <div class="print-section"><strong>Transport:
+                  </strong> ${transportNameEnglish !== 'Other' ? transportNameEnglish : ''} <br/> 
+                  <span style="margin-left: 85px"> ${
+                    transportNameMarathi !== null ? transportNameMarathi : ""
+                  }</span>
+                </div>
+                <div class="print-section">
+                  <strong>Sr. No:</strong> ${id} &emsp; 
+                  <strong>Customer Code: </strong> ${customerCode} &emsp; 
+                  <strong>Case No:</strong> ${caseNo}
+                 </div>
+                </div>
               </body>
-            </html>
-          `);
-          printWindow.document.close();
+            </html>`;
+          window.electronAPI.printData(htmlContent);
         }
       });
     };
@@ -203,7 +190,7 @@ const Dashboard = () => {
       });
       if (isConfirmed) {
         try {
-          window.electronAPI.deleteMedicalData(id).then((res) => {
+          window.electronAPI.deleteMedicalData(id).then(() => {
             toast.success("Data Deleted Successfully");
             setTimeout(() => {
               fetchInvoices();
@@ -233,6 +220,30 @@ const Dashboard = () => {
       return false;
     }
   }
+
+  const filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+      const dateAsString = cellValue;
+      if (dateAsString == null) return -1;
+      const dateParts = dateAsString.split("/");
+      const cellDate = new Date(
+        Number(dateParts[2]),
+        Number(dateParts[1]) - 1,
+        Number(dateParts[0])
+      );
+      if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+        return 0;
+      }
+      if (cellDate < filterLocalDateAtMidnight) {
+        return -1;
+      }
+      if (cellDate > filterLocalDateAtMidnight) {
+        return 1;
+      }
+      return 0;
+    },
+    inRangeFloatingFilterDateFormat: "Do MMM YYYY",
+  };
 
   const colDefs = [
     {
@@ -267,7 +278,6 @@ const Dashboard = () => {
         if (isValidJSON(val.data.invoice)) {
           return JSON.parse(val.data.invoice).toString().replace(/,/g, ", ");
         } else {
-          console.error("Invalid JSON:", val.data.invoice);
           return "Invalid Data";
         }
       },
@@ -307,26 +317,82 @@ const Dashboard = () => {
       minWidth: 170,
       filter: true,
     },
-
     {
       headerName: "Created Date",
       field: "createdDate",
       filter: "agDateColumnFilter",
       minWidth: 135,
-      valueGetter: (val) =>
-        val.data.createdDate
-          ? new Date(val.data.createdDate).toLocaleString()
-          : "",
+      valueGetter: (params) => {
+        if (params.data.createdDate) {
+          const date = new Date(params.data.createdDate);
+          return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+        }
+        return "";
+      },
+      filterParams: filterParams,
+    },
+    {
+      headerName: "Created Time",
+      minWidth: 135,
+      valueGetter: (params) => {
+        if (params.data.createdDate) {
+          const date = new Date(params.data.createdDate);
+          return date.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }); // Format: HH:mm:ss
+        }
+        return "";
+      },
+      sortable: true,
+      filter: "agTextColumnFilter",
     },
     {
       headerName: "Updated Date",
       field: "updatedDate",
       filter: "agDateColumnFilter",
       minWidth: 137,
-      valueGetter: (val) =>
-        val.data.updatedDate
-          ? new Date(val.data.updatedDate).toLocaleString()
-          : "",
+      valueGetter: (params) => {
+        if (params.data.createdDate) {
+          const date = new Date(params.data.createdDate);
+          return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+        }
+        return "";
+      },
+      filterParams: filterParams,
+    },
+    {
+      headerName: "Updated Time",
+      minWidth: 139,
+      valueGetter: (params) => {
+        if (params.data.createdDate) {
+          const date = new Date(params.data.createdDate);
+          return date.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }); // Format: HH:mm:ss
+        }
+        return "";
+      },
+      sortable: true,
+      filter: "agTextColumnFilter",
+    },
+    {
+      headerName: "Cases",
+      field: "caseNo",
+      tooltipField: "caseNo",
+      filter: true,
+      minWidth: 110,
     },
     {
       headerName: "Bill Value",
@@ -391,7 +457,7 @@ const Dashboard = () => {
         }}
       >
         <Breadcrumb>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          {/* <Breadcrumb.Item >Home</Breadcrumb.Item> */}
           <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
         </Breadcrumb>
         <div>

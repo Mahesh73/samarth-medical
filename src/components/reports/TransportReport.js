@@ -113,10 +113,34 @@ const TransportSelection = ({ setShow, setData }) => {
   );
 };
 
-const TransportReport = () => {
+const TransportReport = ({openDashboard}) => {
   const gridRef = useRef();
   const [show, setShow] = useState(true);
   const [data, setData] = useState([]);
+
+  const filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+      const dateAsString = cellValue;
+      if (dateAsString == null) return -1;
+      const dateParts = dateAsString.split("/");
+      const cellDate = new Date(
+        Number(dateParts[2]),
+        Number(dateParts[1]) - 1,
+        Number(dateParts[0])
+      );
+      if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+        return 0;
+      }
+      if (cellDate < filterLocalDateAtMidnight) {
+        return -1;
+      }
+      if (cellDate > filterLocalDateAtMidnight) {
+        return 1;
+      }
+      return 0;
+    },
+    inRangeFloatingFilterDateFormat: "Do MMM YYYY",
+  };
 
   const colDefs = [
     {
@@ -167,10 +191,18 @@ const TransportReport = () => {
       field: "createdDate",
       filter: "agDateColumnFilter",
       minWidth: 135,
-      valueGetter: (val) =>
-        val.data.createdDate
-          ? new Date(val.data.createdDate).toLocaleDateString()
-          : "",
+      valueGetter: (params) => {
+        if (params.data.createdDate) {
+          const date = new Date(params.data.createdDate);
+          return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+        }
+        return "";
+      },
+      filterParams: filterParams,
     },
     {
       headerName: "Bill Value",
@@ -212,7 +244,7 @@ const TransportReport = () => {
         }}
       >
         <Breadcrumb>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          {/* <Breadcrumb.Item onClick={openDashboard}>Home</Breadcrumb.Item> */}
           <Breadcrumb.Item active>Report</Breadcrumb.Item>
         </Breadcrumb>
         <div>
