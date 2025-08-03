@@ -122,6 +122,13 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+if (!selectedTransports || selectedTransports.length === 0) {
+    setError("Please select Transport Name");
+    toast.warning("Please select Transport Name");
+    return;
+  }
+
     const checkCode = customers.find(
       (item) =>
         item.code.toLowerCase() === formData.customerCode.toLocaleLowerCase()
@@ -334,6 +341,7 @@ const ModelForm = ({ show, closeModal, editData, editFlag }) => {
                       label: selectedTransports,
                       value: selectedTransports,
                     }}
+                    required
                   />
                 </Form.Group>
               </Col>

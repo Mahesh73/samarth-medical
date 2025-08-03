@@ -7,20 +7,21 @@ let dbPath = path.join(app.getPath('userData'), 'database.db');
 const sourceDbPath = path.join(__dirname, 'database.db');
 if (!fs.existsSync(dbPath)) {
   fs.copyFileSync(sourceDbPath, dbPath);
-} else {
-  const sourceStats = fs.statSync(sourceDbPath);
-  const targetStats = fs.statSync(dbPath);
-  if (sourceStats.mtime > targetStats.mtime) {
-    fs.copyFileSync(sourceDbPath, dbPath);
-    console.log("Outdated database replaced with the latest version.");
-  } else {
-    console.log("Existing database is up to date.");
-  }
-}
+} 
+// else {
+//   const sourceStats = fs.statSync(sourceDbPath);
+//   const targetStats = fs.statSync(dbPath);
+//   if (sourceStats.mtime > targetStats.mtime) {
+//     fs.copyFileSync(sourceDbPath, dbPath);
+//     console.log("Outdated database replaced with the latest version.");
+//   } else {
+//     console.log("Existing database is up to date.");
+//   }
+// }
 
 // Change for dev and prod
-// const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+// const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {
   if (err) {
     console.error("Error opening database:", err.message);
   } else {

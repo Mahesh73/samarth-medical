@@ -70,7 +70,7 @@ ipcMain.handle("save-medicalData", async (event, data) => {
     ];
     db.all(
       `SELECT * FROM medicalData WHERE EXISTS (
-         SELECT 1 FROM json_each(medicalData.invoice)
+         SELECT 1 FROM json_each(invoice)
          WHERE json_each.value IN (${placeholders})
        )`,
       data.invoice,
@@ -130,7 +130,7 @@ ipcMain.handle("updateMedicalData", async (event, data) => {
   return new Promise((resolve, reject) => {
     db.all(
       `SELECT * FROM medicalData WHERE EXISTS (
-         SELECT 1 FROM json_each(medicalData.invoice)
+         SELECT 1 FROM json_each(invoice)
          WHERE LOWER(json_each.value) IN (${placeholders})
        ) AND id != ?`,
       [...lowercasedInvoices, data.id],

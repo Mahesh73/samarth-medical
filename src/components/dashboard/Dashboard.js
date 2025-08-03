@@ -79,8 +79,8 @@ const Dashboard = () => {
                 </style>
               </head>
               <body>
-                <h2 class="print-section">Samarth Medical</h2>
-                <div class="print-section"><strong>Customer Name:</strong> ${customerNameEnglish} <br/> 
+                <h2 class="print-section">Samarth Medical Stores</h2>
+                <div class="print-section"><strong>To:</strong> ${customerNameEnglish} <br/> 
                   <span style="margin-left: 135px">${customerNameMarathi}</span>
                 </div>
                 <div class="print-section"><strong>Invoice:</strong> ${invoice}</div>
@@ -135,7 +135,7 @@ const Dashboard = () => {
                     writing-mode: vertical-lr;
                     position: absolute;
                     top: 200px;
-                    right: 5px;
+                    right: 40px;
                     font-size: 15px;
                   }
                   @media print {
@@ -164,10 +164,10 @@ const Dashboard = () => {
                   <p style="margin-left: 20px;margin-top: 35px">
                     <strong>${cityEnglish === null ? '': cityEnglish} ${cityMarathi === null ? '' : cityMarathi}</strong>
                   </p>
-                  <p style="margin-top: -25px; margin-left: 85px;">
+                  <p style="margin-top: -15px; margin-left: 115px;">
                     <strong>${invoice === null ? '' : invoice}</strong>
                   </p>
-                  <p style="margin-top: -25px; margin-left: 70px; font-size: 25px;">
+                  <p style="margin-top: -10px; margin-left: 100px; font-size: 25px;">
                     <strong>${transportNameEnglish === null ? '' : transportNameEnglish}</strong>
                     <br />
                     <strong>${transportNameMarathi === null ? '' : transportNameMarathi}</strong>
