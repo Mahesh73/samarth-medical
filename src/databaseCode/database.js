@@ -38,7 +38,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {      
       cityEnglish TEXT,
       cityMarathi TEXT,
       billValue TEXT,
-      caseNo TEXT.
+      caseNo TEXT,
       createdDate TEXT,
       updatedDate TEXT
     )`);
