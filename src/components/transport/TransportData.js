@@ -96,7 +96,6 @@ const TransportDataForm = ({ show, closeModal, editData, editFlag }) => {
                   placeholder="Enter city"
                   value={formData.city}
                   onChange={handleChange}
-                  required
                 />
               </Form.Group>
             </Col>
@@ -109,7 +108,6 @@ const TransportDataForm = ({ show, closeModal, editData, editFlag }) => {
                   placeholder="Enter city"
                   value={formData.city_hindi}
                   onChange={handleChange}
-                  required
                 />
               </Form.Group>
             </Col>
@@ -245,7 +243,7 @@ const TransportData = () => {
         }}
       >
         <Breadcrumb>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          {/* <Breadcrumb.Item href="/dashboard">Home</Breadcrumb.Item> */}
           <Breadcrumb.Item active>Transport Data</Breadcrumb.Item>
         </Breadcrumb>
         <div>

@@ -19,9 +19,8 @@ if (!fs.existsSync(dbPath)) {
 //   }
 // }
 
-// Change for dev and prod
-const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-// const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {            //prod
+// const db = new sqlite3.Database(path.join(__dirname, "database.db"), (err) => {    // dev
   if (err) {
     console.error("Error opening database:", err.message);
   } else {
@@ -39,6 +38,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
       cityEnglish TEXT,
       cityMarathi TEXT,
       billValue TEXT,
+      caseNo TEXT.
       createdDate TEXT,
       updatedDate TEXT
     )`);

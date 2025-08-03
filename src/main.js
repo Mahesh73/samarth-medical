@@ -51,7 +51,9 @@ ipcMain.handle("save-medicalData", async (event, data) => {
     const createdDate = new Date().toISOString();
     const updatedDate = createdDate;
     const placeholders = data.invoice.map(() => "?").join(",");
-    const query = `INSERT INTO medicalData (customerCode, customerNameEnglish, customerNameMarathi, invoice, partyName, description, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi, billValue, createdDate, updatedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO medicalData (customerCode, customerNameEnglish, customerNameMarathi, invoice,
+     partyName, description, cityEnglish, cityMarathi, transportNameEnglish, transportNameMarathi, billValue,
+     caseNo, createdDate, updatedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const invoiceNoJSON = JSON.stringify(data.invoice);
     const values = [
       data.customerCode,
@@ -65,6 +67,7 @@ ipcMain.handle("save-medicalData", async (event, data) => {
       data.transportNameEnglish,
       data.transportNameMarathi,
       data.billValue,
+      data.caseNo || "",
       createdDate,
       updatedDate,
     ];
@@ -108,7 +111,9 @@ ipcMain.handle("updateMedicalData", async (event, data) => {
   const invoiceNoJSON = JSON.stringify(data.invoice);
   const updatedDate = new Date().toISOString();
   const placeholders = data.invoice.map(() => "?").join(",");
-  const query = `UPDATE medicalData SET customerCode = ?, customerNameEnglish = ?, customerNameMarathi = ?, invoice = ?, partyName = ?, description = ?, cityEnglish = ?, cityMarathi = ?, transportNameEnglish = ?, transportNameMarathi = ?, billValue = ?, updatedDate = ? WHERE id = ?`;
+  const query = `UPDATE medicalData SET customerCode = ?, customerNameEnglish = ?, customerNameMarathi = ?,
+   invoice = ?, partyName = ?, description = ?, cityEnglish = ?, cityMarathi = ?, transportNameEnglish = ?,
+   transportNameMarathi = ?, billValue = ?, caseNo = ?, updatedDate = ? WHERE id = ?`;
   const values = [
     data.customerCode,
     data.customerNameEnglish,
@@ -121,6 +126,7 @@ ipcMain.handle("updateMedicalData", async (event, data) => {
     data.transportNameEnglish,
     data.transportNameMarathi,
     data.billValue,
+    data.caseNo || "",
     updatedDate,
     data.id,
   ];
@@ -497,6 +503,41 @@ ipcMain.handle(
   }
 );
 
+ipcMain.handle("print-data", async (event, htmlContent) => {
+  const printWindow = new BrowserWindow({
+    show: true,
+    webPreferences: {
+      nodeIntegration: false,
+    },
+  });
+
+  printWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`);
+
+  printWindow.webContents.on("did-finish-load", () => {
+    printWindow.webContents.print(
+      {
+        silent: true,
+        deviceName: 'EPSON L3210 Series',
+        // deviceName: 'Canon G3030 series HTTP',
+        printBackground: true,
+        pageSize: {
+          width: 101600, // 4 inches * 25400 microns
+          height: 152400, // 6 inches * 25400 microns
+        },
+        margins: {
+          marginType: "none",
+        },
+        landscape: true
+      },
+      (success, errorType) => {
+        if (!success) console.error(`Print failed: ${errorType}`);
+        printWindow.close();
+      }
+    );
+  });
+
+});
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -505,9 +546,10 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
+      enableRemoteModule: false,
     },
   });
-  // win.loadURL("http://localhost:8080"); // development
+  // win.loadURL("http://localhost:8080/#/"); // development
   win.loadURL(`file://${path.join(__dirname, "index.html")}`); //production
 }
 

@@ -129,7 +129,7 @@ const CustomerData = () => {
         }}
       >
         <Breadcrumb>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          {/* <Breadcrumb.Item href="/dashboard">Home</Breadcrumb.Item> */}
           <Breadcrumb.Item active>Customer Data</Breadcrumb.Item>
         </Breadcrumb>
         <div>
